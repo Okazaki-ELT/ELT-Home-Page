@@ -93,6 +93,23 @@
                 }
             };
 
+            // Form Handling (mailto)
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const name = e.target.name.value;
+                const email = e.target.email.value;
+                const type = e.target.type.value;
+                const message = e.target.message.value;
+
+                // メール本文の作成
+                const subject = `【お問い合わせ】${type}`;
+                const body = `お名前: ${name}\nメールアドレス: ${email}\nお問い合わせ種別: ${type}\n\nお問い合わせ内容:\n${message}`;
+                
+                // mailtoスキームを使ってメーラーを起動
+                const mailtoLink = `mailto:elt-sales-info@elt.co.jp?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+            };
+
             // Components
             const NavLink = ({ to, children, mobile }) => (
                 <button
@@ -137,17 +154,17 @@
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-20">
                         {/* Logo */}
-                        <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => scrollToSection('home')}>
+                        <div className="flex-shrink-0 flex items-end cursor-pointer" onClick={() => scrollToSection('home')}>
                         <img 
                             src="ELT_logo.png" 
                             alt="ELT Logo" 
-                            className="h-10 w-auto mr-3"
+                            className="h-10 w-auto mr-2"
                             onError={(e) => {
                                 e.target.style.display = 'none';
                                 e.target.nextSibling.style.display = 'block'; // フォールバックロジック
                             }}
                         />
-                        <span className="font-bold text-2xl tracking-tighter text-gray-900 dark:text-white">
+                        <span className="font-bold text-xl tracking-tighter text-gray-900 dark:text-white leading-none mb-1">
                             ELT<span className="text-blue-600">.</span>Inc
                         </span>
                         </div>
@@ -402,22 +419,22 @@
                             <MapPin className="w-6 h-6 text-blue-400 mt-1" />
                             <div>
                             <h3 className="font-bold text-lg">所在地</h3>
-                            <p className="text-gray-400 mt-1">〒100-0000<br/>東京都千代田区...</p>
+                            <p className="text-gray-400 mt-1">〒103-0027<br/>東京都中央区日本橋2丁目1-17　丹生ビル3階</p>
                             </div>
                         </div>
                         <div className="flex items-start space-x-4">
                             <Phone className="w-6 h-6 text-blue-400 mt-1" />
                             <div>
                             <h3 className="font-bold text-lg">お電話</h3>
-                            <p className="text-gray-400 mt-1">03-0000-0000</p>
-                            <p className="text-sm text-gray-500">（平日 10:00 - 18:00）</p>
+                            <p className="text-gray-400 mt-1">050-3588-2372</p>
+                            <p className="text-sm text-gray-500">(Voice Message/Faxのみ)</p>
                             </div>
                         </div>
                         <div className="flex items-start space-x-4">
                             <Mail className="w-6 h-6 text-blue-400 mt-1" />
                             <div>
                             <h3 className="font-bold text-lg">メール</h3>
-                            <p className="text-gray-400 mt-1">info@elt.co.jp</p>
+                            <p className="text-gray-400 mt-1">first_contact@elt.co.jp</p>
                             </div>
                         </div>
                         
@@ -433,18 +450,18 @@
 
                         {/* Form */}
                         <div className="bg-white/5 p-8 rounded-2xl border border-white/10 backdrop-blur-sm">
-                        <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                        <form className="space-y-6" onSubmit={handleSubmit}>
                             <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-300">お名前</label>
-                            <input type="text" id="name" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="山田 太郎" />
+                            <input type="text" id="name" name="name" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="山田 太郎" required />
                             </div>
                             <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-300">メールアドレス</label>
-                            <input type="email" id="email" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="yamada@company.com" />
+                            <input type="email" id="email" name="email" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="yamada@company.com" required />
                             </div>
                             <div>
                             <label htmlFor="type" className="block text-sm font-medium text-gray-300">お問い合わせ種別</label>
-                            <select id="type" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4">
+                            <select id="type" name="type" className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4">
                                 <option>ネットワーク構築・保守について</option>
                                 <option>AI・業務効率化について</option>
                                 <option>Web制作について</option>
@@ -453,7 +470,7 @@
                             </div>
                             <div>
                             <label htmlFor="message" className="block text-sm font-medium text-gray-300">お問い合わせ内容</label>
-                            <textarea id="message" rows={4} className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="ご相談内容をご記入ください"></textarea>
+                            <textarea id="message" name="message" rows={4} className="mt-1 block w-full bg-gray-800 border-gray-700 rounded-md shadow-sm text-white focus:ring-blue-500 focus:border-blue-500 py-3 px-4" placeholder="ご相談内容をご記入ください" required></textarea>
                             </div>
                             <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                             送信する
@@ -469,7 +486,7 @@
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
                         <div className="col-span-1 md:col-span-2">
-                        <div className="flex items-center mb-4">
+                        <div className="flex items-end mb-4">
                              {/* Footer Logo */}
                              <img 
                                 src="ELT_logo.png" 
@@ -479,7 +496,7 @@
                                     e.target.style.display = 'none';
                                 }}
                             />
-                            <span className="font-bold text-2xl tracking-tighter text-white">
+                            <span className="font-bold text-lg tracking-tighter text-white leading-none mb-0.5">
                                 ELT<span className="text-blue-600">.</span>Inc
                             </span>
                         </div>
